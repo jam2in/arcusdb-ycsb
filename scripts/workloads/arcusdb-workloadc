@@ -1,0 +1,28 @@
+# ArcusDB YCSB workload C
+#
+# Read 100%.
+#
+# This is the safest default workload for the current ArcusDB binding because
+# it only uses insert during load and read during run.
+
+workload=site.ycsb.workloads.CoreWorkload
+
+# Override these with -p for real benchmark sizes.
+recordcount=10000
+operationcount=10000
+
+# Record shape.
+fieldcount=10
+fieldlength=100
+readallfields=true
+writeallfields=true
+
+# Transaction mix for the run phase.
+readproportion=1.0
+updateproportion=0.0
+insertproportion=0.0
+scanproportion=0.0
+readmodifywriteproportion=0.0
+
+# Same default access pattern as YCSB workload C.
+requestdistribution=zipfian

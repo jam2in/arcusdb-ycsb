@@ -1,0 +1,91 @@
+syntax = "proto3";
+
+package arcusdb;
+
+option java_package = "com.jam2in.arcusdb.proto";
+option java_outer_classname = "ArcusDbProto";
+
+message Request {
+  uint32 request_id = 1;
+  oneof kind {
+    InsertRequest insert = 11;
+    FindRequest find = 12;
+
+    CreateCollectionRequest create_collection = 21;
+    DropCollectionRequest drop_collection = 22;
+  }
+}
+
+message Response {
+  uint32 response_to = 1;
+  oneof kind {
+    WriteResponse write = 11;
+    FindResponse find = 12;
+  }
+}
+
+message CreateCollectionRequest {
+  string name = 1;
+  bytes catalog = 2;
+}
+
+message DropCollectionRequest {
+  string name = 1;
+}
+
+message InsertRequest {
+  string collection = 1;
+  bytes document = 2;
+}
+
+message WriteResponse {
+  StatusCode status = 1;
+}
+
+enum StatusCode {
+  STATUS_CODE_OK = 0;
+  STATUS_CODE_NOT_SUPPORT = 1;
+  STATUS_CODE_INVALID = 2;
+  STATUS_CODE_INTERNAL = 3;
+}
+
+// Queries documents from a collection that match the given conditions.
+message FindRequest {
+  string collection = 1;
+  FilterExpression filter = 2;
+}
+
+message FindResponse {
+  StatusCode status = 1;
+  repeated bytes documents = 2;
+}
+
+message FilterExpression {
+  oneof kind {
+    CompareExpression expr = 1;
+    MultiFilterExpression and = 2;
+    MultiFilterExpression or = 3;
+  }
+}
+
+message MultiFilterExpression {
+  repeated FilterExpression exprs = 1;
+}
+
+message CompareExpression {
+  enum Operation {
+    EQ = 0;
+    GE = 1;
+  }
+  Operation op = 1;
+  Expression lhs = 2;
+  Expression rhs = 3;
+}
+
+message Expression {
+  oneof kind {
+    string field_ref = 1;
+    int64 int_val = 2;
+    string str_val = 3;
+  }
+}

@@ -1,0 +1,32 @@
+# ArcusDB YCSB workload A
+#
+# Read 50% / Write 50%.
+#
+# Note: Standard YCSB workload A usually means read 50% / update 50%.
+# The current ArcusDB binding supports insert and read, but not update yet.
+# Therefore this ArcusDB-specific workload uses insert as the write operation.
+
+workload=site.ycsb.workloads.CoreWorkload
+
+# Override these with -p for real benchmark sizes.
+recordcount=10000
+operationcount=10000
+
+# Record shape.
+fieldcount=10
+fieldlength=100
+readallfields=true
+writeallfields=true
+
+# Transaction mix for the run phase.
+readproportion=0.5
+updateproportion=0.0
+insertproportion=0.5
+scanproportion=0.0
+readmodifywriteproportion=0.0
+
+# Keep load order deterministic. Override from the command line if needed.
+insertorder=ordered
+
+# Override to zipfian if you want hot-key access.
+requestdistribution=uniform

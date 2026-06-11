@@ -10,6 +10,7 @@ message Request {
   oneof kind {
     InsertRequest insert = 11;
     FindRequest find = 12;
+    DeleteRequest delete = 13;
 
     CreateCollectionRequest create_collection = 21;
     DropCollectionRequest drop_collection = 22;
@@ -21,6 +22,7 @@ message Response {
   oneof kind {
     WriteResponse write = 11;
     FindResponse find = 12;
+    DeleteResponse delete = 13;
   }
 }
 
@@ -60,6 +62,16 @@ message FindResponse {
   repeated bytes documents = 2;
 }
 
+message DeleteRequest {
+  string collection = 1;
+  FilterExpression filter = 2;
+}
+
+message DeleteResponse {
+  StatusCode status = 1;
+  uint64 deleted = 2;
+}
+
 message FilterExpression {
   oneof kind {
     CompareExpression expr = 1;
@@ -75,7 +87,11 @@ message MultiFilterExpression {
 message CompareExpression {
   enum Operation {
     EQ = 0;
-    GE = 1;
+    reserved 1; // NE
+    reserved 2; // LT
+    LE = 3;
+    reserved 4; // GT
+    GE = 5;
   }
   Operation op = 1;
   Expression lhs = 2;

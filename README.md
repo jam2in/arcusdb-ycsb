@@ -60,8 +60,8 @@ YCSB 기본 `workloada`, `workloadb`는 update를 포함하므로 현재 바인�
 ./build.sh
 cd ycsb-0.17.0
 
-./bin/ycsb-arcusdb load -P workloads/arcusdb-workloadc -p table=test
-./bin/ycsb-arcusdb run  -P workloads/arcusdb-workloadc -p table=test
+./bin/ycsb-arcusdb load -P workloads/arcusdb-workloadc
+./bin/ycsb-arcusdb run  -P workloads/arcusdb-workloadc
 ```
 
 실제 서버 주소, 포트, record 수, operation 수는 실행 시 `-p` 옵션으로 지정합니다.

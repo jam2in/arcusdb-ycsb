@@ -1,6 +1,7 @@
 package com.jam2in.arcusdb.client;
 
 import com.google.protobuf.ByteString;
+import com.jam2in.arcusdb.proto.ArcusDbProto.CreateCollectionRequest;
 import com.jam2in.arcusdb.proto.ArcusDbProto.FilterExpression;
 import com.jam2in.arcusdb.proto.ArcusDbProto.FindRequest;
 import com.jam2in.arcusdb.proto.ArcusDbProto.FindResponse;
@@ -24,6 +25,28 @@ public final class ArcusDbClient implements AutoCloseable {
 
   public ArcusDbClient(ArcusDbClientConfig config) {
     this.connection = new ArcusDbConnection(Objects.requireNonNull(config, "config"));
+  }
+
+  public void createCollection(String name, Document catalog) {
+    ByteString bytes = ByteString.copyFrom(BsonDocuments.encode(catalog));
+
+    Request request = Request.newBuilder()
+        .setCreateCollection(
+            CreateCollectionRequest.newBuilder()
+                .setName(name)
+                .setCatalog(bytes))
+        .build();
+
+    Response response = connection.send(request);
+    if (response.getKindCase() != KindCase.WRITE) {
+      throw new ArcusDbException(
+          "createCollection failed: expected WRITE response but got " + response.getKindCase());
+    }
+
+    WriteResponse write = response.getWrite();
+    if (write.getStatus() != StatusCode.STATUS_CODE_OK) {
+      throw new ArcusDbStatusException("createCollection", write.getStatus());
+    }
   }
 
   public void insert(String collection, Document document) {

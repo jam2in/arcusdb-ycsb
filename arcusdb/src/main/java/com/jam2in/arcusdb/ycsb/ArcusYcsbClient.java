@@ -67,10 +67,12 @@ public class ArcusYcsbClient extends DB {
           new ArcusDbClientConfig(host, port, timeoutMillis));
       closeClient = true;
 
+      String name = "usertable";
       Document document = new Document("primary_key", "_id")
+          .append("name", name)
           .append("required", List.of())
           .append("indexes", new Document());
-      client.createCollection("usertable", document);
+      client.createCollection(name, document);
     } catch (RuntimeException e) {
       throw new DBException("Failed to initialize ArcusDB client.", e);
     }
